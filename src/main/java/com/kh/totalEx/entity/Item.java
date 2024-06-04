@@ -3,6 +3,7 @@ package com.kh.totalEx.entity;
 import com.kh.totalEx.constant.ItemSellStatus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity // JPA Entity 클래스임을 지정, Entity 클래스는 반드시 기본키를 가져야 함
+@ToString // 값 문자로 받으려면 써야됨, 안쓰면 해쉬로 값 날라옴
 public class Item {
     @Id
     @Column(name = "item_id")
