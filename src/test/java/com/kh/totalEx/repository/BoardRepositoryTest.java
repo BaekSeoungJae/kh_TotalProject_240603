@@ -46,4 +46,5 @@ class BoardRepositoryTest {
         List<Board> boardList = boardRepository.findByTitleContaining("Con");
         for (Board board : boardList) System.out.println("게시글 : " + board.toString());
     }
+
 }

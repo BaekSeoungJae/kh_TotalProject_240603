@@ -1,6 +1,7 @@
 package com.kh.totalEx.repository;
 import com.kh.totalEx.constant.ItemSellStatus;
 import com.kh.totalEx.entity.Item;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class ItemRepositoryTest {
@@ -23,7 +25,7 @@ class ItemRepositoryTest {
             Item item = new Item();
             item.setItemNm("테스트 상품" + i);
             item.setPrice(10000 + i);
-            item.setItemDetail("테스트 상품 상세 설명");
+            item.setItemDetail("테스트 상품 상세 설명" + i);
             item.setItemSellStatus(ItemSellStatus.SELL);
             item.setStockNumber(100);
             item.setRegTime(LocalDateTime.now());
@@ -64,22 +66,6 @@ class ItemRepositoryTest {
     }
 
     @Test
-    @DisplayName("@Query 를 이용한 상품 조회 테스트")
-    public void findByItemDetailTest() {
-        this.createItemTest();
-        List<Item> itemList = itemRepository.findByItemDetail("테스트 상품 상세 설명");
-        for(Item e : itemList) System.out.println(e.toString());
-    }
-
-    @Test
-    @DisplayName("nativeQuery 속성을 이용한 상품 조회 테스트")
-    public void findByItemDetailByNative() {
-        this.createItemTest();
-        List<Item> itemList = itemRepository.findByItemDetailByNative("테스트 상품 상세 설명");
-        for(Item e : itemList) System.out.println(e.toString());
-    }
-
-    @Test
     @DisplayName("Between으로 조건 검색")
     public void findByPriceBetween() {
         this.createItemTest();
@@ -93,6 +79,23 @@ class ItemRepositoryTest {
         this.createItemTest();
         List<Item> itemList = itemRepository.findByItemNmContaining("1");
         for(Item item : itemList) System.out.println(item.toString());
+    }
+
+    @Test
+    @DisplayName("@Query 를 이용한 검색 기능 구현")
+    public void findByItemDetailTest() {
+        this.createItemTest();
+        List<Item> itemList = itemRepository.findByItemDetail("설명6");
+//        for(Item e : itemList) System.out.println(e.toString());
+        for(Item e : itemList) log.info(e.toString()); //@Slf4j
+    }
+
+    @Test
+    @DisplayName("nativeQuery 속성을 이용한 상품 조회 테스트")
+    public void findByItemDetailByNative() {
+        this.createItemTest();
+        List<Item> itemList = itemRepository.findByItemDetailByNative("테스트 상품 상세 설명");
+        for(Item e : itemList) log.info(e.toString());
     }
 
 }
