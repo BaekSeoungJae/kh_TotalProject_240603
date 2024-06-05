@@ -18,4 +18,10 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    private int count;
+
 }
