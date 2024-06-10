@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ class OrderRepositoryTest {
     ItemRepository itemRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    OrderItemRepository orderItemRepository;
     @PersistenceContext
     EntityManager em;
 
@@ -73,7 +76,7 @@ class OrderRepositoryTest {
             orderItem.setCount(10);
             orderItem.setOrderPrice(1000);
             orderItem.setOrder(order);
-            order.getOrderItems().add(orderItem);
+            order.getOrderItemList().add(orderItem);
         }
 
         Member member = new Member();
@@ -90,8 +93,19 @@ class OrderRepositoryTest {
     @DisplayName("고아객체 제거 테스트") // 테스트케이스 이름 설정
     public void orphanRemovalTest(){
         Order order = this.createOrder();
-        order.getOrderItems().remove(0);
+        order.getOrderItemList().remove(0);
         em.flush(); // 즉시 데이터베이스에 반영
-        log.info(String.valueOf(order.getOrderItems().size()));
+        log.info(String.valueOf(order.getOrderItemList().size()));
+    }
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    public void lazyLoadingTest() {
+        Order order = this.createOrder();
+        Long orderItemId = order.getOrderItemList().get(0).getId();
+        em.flush();
+        em.clear();
+        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(EntityNotFoundException::new);
+        log.info("Order class : " + orderItem.getOrder().getClass());
     }
 }
