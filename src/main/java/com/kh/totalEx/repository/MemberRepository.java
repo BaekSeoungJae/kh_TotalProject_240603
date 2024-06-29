@@ -21,5 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 4. 로그인 체크
     List<Member> findByEmailAndPwd(String email, String pwd);
-
+    
+    //test
 }
